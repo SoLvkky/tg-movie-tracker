@@ -1,5 +1,6 @@
 # MovieTracker Bot
 
+![https://t.me/movie_collect_bot](https://img.shields.io/badge/Telegram-BOT-blue?logo=telegram)
 ![Python](https://img.shields.io/badge/Python-3.12-blue?logo=python)
 ![License](https://img.shields.io/badge/License-MIT-black?logo=github)
 

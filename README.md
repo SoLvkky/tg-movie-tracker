@@ -1,6 +1,6 @@
 # MovieTracker Bot
 
-[EXAMPLE](https://t.me/movie_collect_bot?start=1)
+[LIVE DEMO](https://t.me/movie_collect_bot?start=1)
 
 ![Python](https://img.shields.io/badge/Python-3.12-blue?logo=python)
 ![License](https://img.shields.io/badge/License-MIT-black?logo=github)

@@ -83,7 +83,10 @@ cd tg-movie-tracker/
 BOT_TOKEN # Your Telegram Bot Token
 TMDB_APIKEY # Your TMDB API Autohrization key
 DATABASE_URL # Async URL of your Database
-DATABASE_SYNC_UR # Sync URL of your Database
+DATABASE_SYNC_URL # Sync URL of your Database
+POSTGRES_USER # Your PostgreSQL Username
+POSTGRES_PASSWORD # Your PostgreSQL Password
+POSTGRES_DB # Your Database Name
 ```
 
 Example variables are located in .env.example
@@ -113,7 +116,10 @@ pip install -r requirements.txt
 BOT_TOKEN # Your Telegram Bot Token
 TMDB_APIKEY # Your TMDB API Autohrization key
 DATABASE_URL # Async URL of your Database
-DATABASE_SYNC_UR # Sync URL of your Database
+DATABASE_SYNC_URL # Sync URL of your Database
+POSTGRES_USER # Your PostgreSQL Username
+POSTGRES_PASSWORD # Your PostgreSQL Password
+POSTGRES_DB # Your Database Name
 ```
 
 - Start your bot

@@ -3,7 +3,7 @@ from bot.config import settings
 
 TMDB_BASE_URL = "https://api.themoviedb.org/3"
 
-async def search_movie(query: str):
+async def search_movie(query: str, adult_user: bool):
     async with aiohttp.ClientSession() as session:
         url = f"{TMDB_BASE_URL}/search/movie"
 
@@ -13,7 +13,7 @@ async def search_movie(query: str):
         }
 
         params = {
-            "include_adult": "true",
+            "include_adult": "true" if adult_user else "false",
             "language": "en-US",
             "query": query
         }

@@ -94,8 +94,7 @@ Example variables are located in .env.example
 - Build and start the stack:
 
 ```bash
-docker-compose build
-docker-compose up -d
+docker compose up -d --build
 ```
 
 ### Using Python

@@ -5,7 +5,7 @@ from aiogram.client.default import DefaultBotProperties
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
 from bot.middlewares.db import DatabaseMiddleware
 from bot.config import settings
-from bot.handlers import menu, start, add_movie, stats, my_movies, movie_handler
+from bot.handlers import menu, setting, start, add_movie, stats, my_movies, movie_handler
 from bot.logger import logger
 
 async def main():
@@ -21,6 +21,7 @@ async def main():
         stats.router,
         my_movies.router,
         movie_handler.router,
+        setting.router,
     )
     logger.info("Routers in DP registered")
 

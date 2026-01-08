@@ -1,29 +1,15 @@
-from aiogram import Router, types
-from aiogram.utils.keyboard import InlineKeyboardBuilder
-from bot.keyboards.main_menu import get_main_menu
+from aiogram import F,Router, types
+from bot.keyboards.back_button import back_button
 from bot.logger import logger
 from database.crud import *
 from sqlalchemy.ext.asyncio import AsyncSession
 
 router = Router()
 
-def back_button(callback_data: str):
-    builder = InlineKeyboardBuilder()
-    builder.button(text="GO BACK", callback_data=callback_data)
-    builder.adjust(1)
-
-    return builder
-
-@router.callback_query(lambda c: c.data == "menu")
-async def go_to_menu(callback: types.CallbackQuery):
-    await callback.message.edit_text(
-        text="Choose your option:",
-        reply_markup=get_main_menu()
-    )
+@router.callback_query(F.data == "stats")
+async def user_stats(callback: types.CallbackQuery, session: AsyncSession):
     await callback.answer()
 
-@router.callback_query(lambda c: c.data == "stats")
-async def user_stats(callback: types.CallbackQuery, session: AsyncSession):
     user = await session.scalar(select(User).where(User.telegram_id == callback.message.chat.id))
     count = await get_user_movie_count(session=session, user_id=user.id)
     genres_list = await get_top_genres(session=session, user_id=user.id)

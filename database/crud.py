@@ -24,6 +24,29 @@ async def get_or_create_user(session: AsyncSession, telegram_id: int, username: 
     logger.info(f"User {telegram_id} was added to database")
     return user
 
+async def toggle_adult(session: AsyncSession, telegram_id: int) -> bool:
+    res = await session.execute(select(User).where(User.telegram_id == telegram_id))
+    user = res.scalar_one_or_none()
+
+    if user is None:
+        raise ValueError(f"User {telegram_id} not found")
+
+    user.adult = not bool(user.adult)
+    await session.commit()
+    await session.refresh(user)
+    return user.adult
+
+async def get_adult(session: AsyncSession, telegram_id: int) -> bool:
+    res = await session.execute(
+        select(User.adult).where(User.telegram_id == telegram_id)
+    )
+    adult = res.scalar_one_or_none()  # вернёт bool/None [web:720]
+
+    if adult is None:
+        raise ValueError(f"User {telegram_id} not found")
+
+    return bool(adult)
+
 async def get_or_create_movie(session: AsyncSession, tmdb_id: int, title: str, rating: str, genres: JSON, year: int, duration: int, poster: str):
     logger.debug(f"get_or_create_movie(tmdb_id={tmdb_id}, title={title}, rating={rating}, genres={genres}, year={year}, duration={duration}, poster={poster}) called")
     res = await session.execute(

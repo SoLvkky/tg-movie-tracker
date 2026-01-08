@@ -1,27 +1,23 @@
-from aiogram import Router, types
+from aiogram import F, Router, types
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 from aiogram.fsm.context import FSMContext
 from bot.states.movie_states import MovieStates
+from bot.keyboards.back_button import back_button
 from database.crud import *
 from datetime import datetime
 from services.tmdb_api import get_movie_details, get_similar
 
 router = Router()
 
-def back_button(callback_data: str):
-    builder = InlineKeyboardBuilder()
-    builder.button(text="GO BACK", callback_data=callback_data)
-    builder.adjust(1)
-
-    return builder
-
-@router.callback_query(MovieStates.waiting_for_choice)
+@router.callback_query(MovieStates.waiting_for_choice, F.data.startswith(("choice:", "similar:")))
 async def process_movie_choice(callback: types.CallbackQuery, state: FSMContext, session: AsyncSession):
+    await callback.answer()
+
     data = await state.get_data()
 
     parent = data.get("parent")
 
-    movie_id = callback.data
+    movie_id = callback.data.split(":", 1)[1]
 
     movie = await get_movie_details(movie_id)
 
@@ -38,13 +34,12 @@ async def process_movie_choice(callback: types.CallbackQuery, state: FSMContext,
     release_str = movie.get("release_date") or ""
     runtime = movie.get("runtime") or 0
 
+    year = None
     if release_str:
         try:
-            release = datetime.strptime(release_str, "%Y-%m-%d").strftime("%B %d, %Y").replace(" 0", " ")
+            year = datetime.strptime(release_str, "%Y-%m-%d").year
         except ValueError:
-            release = "Unknown"
-    else:
-        release = "Unknown"
+            year = None
 
     for i in movie["genres"]:
         genres.append(i["name"])
@@ -55,7 +50,7 @@ async def process_movie_choice(callback: types.CallbackQuery, state: FSMContext,
         title=title,
         rating=rating,
         genres=genres,
-        year=datetime.strptime(release, "%B %d, %Y").year,
+        year=year,
         duration=runtime,
         poster=poster
     )
@@ -74,23 +69,23 @@ async def process_movie_choice(callback: types.CallbackQuery, state: FSMContext,
     builder = InlineKeyboardBuilder()
     builder.button(text=watched, callback_data="add_confirm")
     builder.button(text="Show Similar", callback_data="similar")
-    builder.button(text="MAIN MENU", callback_data="menu")
+    builder.button(text="MAIN MENU", callback_data="menu_delete")
 
     if parent == "add_movie":
         builder.attach(back_button("go_back"))
     
     builder.adjust(1, 1, 2)
 
-    await callback.message.delete()
-
     await callback.message.answer_photo(photo=poster, caption=(
         f'🎬 {title}\n\n'
-        f'🗓️ Release date: {release}\n'
+        f'🗓️ Release date: {year}\n'
         f'⭐ Rating: {rating}\n'
         f'🕒 Runtime: {runtime} minutes\n'
         f'🎭 Genres: {", ".join(genres)}\n\n'
         f'📜 Plot: {overview}'
     ), reply_markup=builder.as_markup())
+
+    await callback.message.delete()
 
     await state.update_data(movie=int(movie_id))
     await state.set_state(MovieStates.waiting_for_confirmation)
@@ -115,21 +110,22 @@ async def confirm_or_go_back(callback: types.CallbackQuery, state: FSMContext, s
         if result:
             for item in result:
                 title = item.get("original_title")
-                year = (item.get("release_date") or "????")[:4]
-                adult = ", 18+ ONLY" if item.get("adult") else ""
+                year = (item.get("release_date") or "").split("-")[0] or "????"
+                adult = ", 18+" if item.get("adult") else ""
 
                 builder.button(
                     text=f"{title}, {year}{adult}",
-                    callback_data=str(item["id"])
+                    callback_data=f"similar:{item['id']}"
                 )
 
             builder.adjust(1)
 
-            await callback.message.delete()
             await callback.message.answer(
                 "Choose similar movie:",
                 reply_markup=builder.as_markup()
             )
+
+            await callback.message.delete()
 
             await state.set_state(MovieStates.waiting_for_choice)
         else:
@@ -140,61 +136,64 @@ async def confirm_or_go_back(callback: types.CallbackQuery, state: FSMContext, s
     if callback.data == "go_back":
         search_results = data.get("search_results", [])
 
+        await callback.answer()
+
         if not search_results:
             await callback.answer("There are no previous results")
             return
 
         builder = InlineKeyboardBuilder()
         for i in search_results:
-            adult = ", 18+ ONLY" if i.get("adult") else ""
+            adult = ", 18+" if i.get("adult") else ""
             builder.button(text=f'{i.get("original_title")}, {i.get("release_date").split("-")[0] or "????"}{adult}',
-                           callback_data=str(i["id"]))
+                           callback_data=f"choice:{i['id']}")
         builder.attach(back_button("add_movie"))
         builder.adjust(1)
-
-        await callback.message.delete()
 
         await callback.message.answer(
             "Choose your movie:",
             reply_markup=builder.as_markup()
         )
 
+        await callback.message.delete()
+
         await state.set_state(MovieStates.waiting_for_choice)
-        await callback.answer()
+
         return
     
     elif callback.data == "add_confirm":
-        user = await session.scalar(select(User).where(User.telegram_id == callback.message.chat.id))
-        movie = await session.scalar(select(Movie).where(Movie.tmdb_id == data.get("movie")))
+        async with session.begin():
+            user = await session.scalar(select(User).where(User.telegram_id == callback.message.chat.id))
+            movie = await session.scalar(select(Movie).where(Movie.tmdb_id == data.get("movie")))
+            result = await add_movie_watched(session=session, user_id=user.id, movie_id=movie.id)
 
-        result = await add_movie_watched(session=session, user_id=user.id, movie_id=movie.id)
-        if result:
-            await callback.answer("Movie was added")
+            if result:
+                await callback.answer("Movie was added")
 
-            builder = InlineKeyboardBuilder()
-            builder.button(text="✅ Watched - Click to change", callback_data="add_confirm")
-            builder.button(text="Show Similar", callback_data="similar")
-            builder.button(text="MAIN MENU", callback_data="menu")
+                builder = InlineKeyboardBuilder()
+                builder.button(text="✅ Watched - Click to change", callback_data="add_confirm")
+                builder.button(text="Show Similar", callback_data="similar")
+                builder.button(text="MAIN MENU", callback_data="menu_delete")
 
-            if parent == "add_movie":
-                builder.attach(back_button("go_back"))
+                if parent == "add_movie":
+                    builder.attach(back_button("go_back"))
 
-            builder.adjust(1, 1, 2)
+                builder.adjust(1, 1, 2)
 
-            await callback.message.edit_reply_markup(reply_markup=builder.as_markup())
-        else:
-            await remove_movie_watched(session=session, user_id=user.id, movie_id=movie.id)
+                await callback.message.edit_reply_markup(reply_markup=builder.as_markup())
+            else:
+                await remove_movie_watched(session=session, user_id=user.id, movie_id=movie.id)
 
-            await callback.answer("Movie was removed")
+                await callback.answer("Movie was removed")
 
-            builder = InlineKeyboardBuilder()
-            builder.button(text="❌ Not Watched - Click to change", callback_data="add_confirm")
-            builder.button(text="Show Similar", callback_data="similar")
-            builder.button(text="MAIN MENU", callback_data="menu")
+                builder = InlineKeyboardBuilder()
+                builder.button(text="❌ Not Watched - Click to change", callback_data="add_confirm")
+                builder.button(text="Show Similar", callback_data="similar")
+                builder.button(text="MAIN MENU", callback_data="menu_delete")
 
-            if parent == "add_movie":
-                builder.attach(back_button("go_back"))
+                if parent == "add_movie":
+                    builder.attach(back_button("go_back"))
 
-            builder.adjust(1, 1, 2)
+                builder.adjust(1, 1, 2)
 
-            await callback.message.edit_reply_markup(reply_markup=builder.as_markup())
+                await callback.message.edit_reply_markup(reply_markup=builder.as_markup())

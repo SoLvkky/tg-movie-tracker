@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## [1.0.0-beta.3] - 2026-01-09
+
+### Fixed
+
+- Case, where movies were not added to the watched library.
+- Case, in which the movie pages from the viewed films library did not open.
+
 ## [1.0.0-beta.2] - 2026-01-08
 
 ### Added

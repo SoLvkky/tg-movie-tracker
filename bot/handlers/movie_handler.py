@@ -118,6 +118,7 @@ async def confirm_or_go_back(callback: types.CallbackQuery, state: FSMContext, s
                     callback_data=f"similar:{item['id']}"
                 )
 
+            builder.attach(back_button("go_back"))
             builder.adjust(1)
 
             await callback.message.answer(
@@ -162,38 +163,37 @@ async def confirm_or_go_back(callback: types.CallbackQuery, state: FSMContext, s
         return
     
     elif callback.data == "add_confirm":
-        async with session.begin():
-            user = await session.scalar(select(User).where(User.telegram_id == callback.message.chat.id))
-            movie = await session.scalar(select(Movie).where(Movie.tmdb_id == data.get("movie")))
-            result = await add_movie_watched(session=session, user_id=user.id, movie_id=movie.id)
+        user = await session.scalar(select(User).where(User.telegram_id == callback.message.chat.id))
+        movie = await session.scalar(select(Movie).where(Movie.tmdb_id == data.get("movie")))
+        result = await add_movie_watched(session=session, user_id=user.id, movie_id=movie.id)
 
-            if result:
-                await callback.answer("Movie was added")
+        if result:
+            await callback.answer("Movie was added")
 
-                builder = InlineKeyboardBuilder()
-                builder.button(text="✅ Watched - Click to change", callback_data="add_confirm")
-                builder.button(text="Show Similar", callback_data="similar")
-                builder.button(text="MAIN MENU", callback_data="menu_delete")
+            builder = InlineKeyboardBuilder()
+            builder.button(text="✅ Watched - Click to change", callback_data="add_confirm")
+            builder.button(text="Show Similar", callback_data="similar")
+            builder.button(text="MAIN MENU", callback_data="menu_delete")
 
-                if parent == "add_movie":
-                    builder.attach(back_button("go_back"))
+            if parent == "add_movie":
+                builder.attach(back_button("go_back"))
 
-                builder.adjust(1, 1, 2)
+            builder.adjust(1, 1, 2)
 
-                await callback.message.edit_reply_markup(reply_markup=builder.as_markup())
-            else:
-                await remove_movie_watched(session=session, user_id=user.id, movie_id=movie.id)
+            await callback.message.edit_reply_markup(reply_markup=builder.as_markup())
+        else:
+            await remove_movie_watched(session=session, user_id=user.id, movie_id=movie.id)
 
-                await callback.answer("Movie was removed")
+            await callback.answer("Movie was removed")
 
-                builder = InlineKeyboardBuilder()
-                builder.button(text="❌ Not Watched - Click to change", callback_data="add_confirm")
-                builder.button(text="Show Similar", callback_data="similar")
-                builder.button(text="MAIN MENU", callback_data="menu_delete")
+            builder = InlineKeyboardBuilder()
+            builder.button(text="❌ Not Watched - Click to change", callback_data="add_confirm")
+            builder.button(text="Show Similar", callback_data="similar")
+            builder.button(text="MAIN MENU", callback_data="menu_delete")
 
-                if parent == "add_movie":
-                    builder.attach(back_button("go_back"))
+            if parent == "add_movie":
+                builder.attach(back_button("go_back"))
 
-                builder.adjust(1, 1, 2)
+            builder.adjust(1, 1, 2)
 
-                await callback.message.edit_reply_markup(reply_markup=builder.as_markup())
+            await callback.message.edit_reply_markup(reply_markup=builder.as_markup())

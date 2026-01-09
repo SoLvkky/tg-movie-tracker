@@ -22,7 +22,7 @@ async def get_movies(callback: types.CallbackQuery, session: AsyncSession, state
         builder = InlineKeyboardBuilder()
 
         for m in movies:
-            builder.button(text=f'{m["title"]}, {m["year"]}', callback_data=str(m["tmdb_id"]))
+            builder.button(text=f'{m["title"]}, {m["year"]}', callback_data=str(f"choice:{m['tmdb_id']}"))
 
         builder.attach(back_button("menu"))
 

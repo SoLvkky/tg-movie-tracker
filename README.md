@@ -121,6 +121,12 @@ POSTGRES_PASSWORD # Your PostgreSQL Password
 POSTGRES_DB # Your Database Name
 ```
 
+- Complete Alembic migrations:
+
+```bash
+alembic upgrade head
+```
+
 - Start your bot
 
 ```bash

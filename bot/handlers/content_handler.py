@@ -152,7 +152,7 @@ async def process_series_choice(callback: types.CallbackQuery, state: FSMContext
 
     await callback.message.answer_photo(photo=poster, caption=(
         f'🎬 {title}\n'
-        f'📺 {episodes} episodes in {seasons} seasons'
+        f'📺 {episodes} episodes in {seasons} seasons\n\n'
         f'🗓️ Release date: {year}\n'
         f'⭐ Rating: {rating}\n'
         f'🎭 Genres: {", ".join(genres)}\n\n'

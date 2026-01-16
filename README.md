@@ -3,17 +3,17 @@
 ![Python](https://img.shields.io/badge/Python-3.12-blue?logo=python)
 ![License](https://img.shields.io/badge/License-MIT-black?logo=github)
 
-A Telegram bot that helps users build a personal movie collection, track genre-based stats, and discover similar films — all without leaving Telegram
+A Telegram bot that helps users build a personal movies/series collection, track genre-based stats, and discover similar films — all without leaving Telegram
 
 The bot is designed to be fully interactive: almost all actions are performed via inline buttons, not text commands.
 
 ## Features
 
-- Add movies to your personal collection
+- Add movies/series to your personal collection
 - View and manage what you’ve added
 - Genre analytics – see your most-watched genres and distribution
-- Similar movie suggestions based on your preferences
-- Search for movies by title
+- Similar content suggestions based on your preferences
+- Search for content by title
 
 ## Tech Stack
 
@@ -21,7 +21,7 @@ The bot is designed to be fully interactive: almost all actions are performed vi
 - Aiogram (async Telegram bot framework)
 - PostgreSQL
 - Alembic
-- TMDB API (movie info)
+- TMDB API (movies/series info)
 - Docker (optional)
 
 ## Project Structure
@@ -49,11 +49,11 @@ project/
 
 ## How It Works
 
-1. User enters a movie name
+1. User enters a name
 2. Bot fetches metadata (local DB or TMDB)
-3. User choose the desired movie
-4. User confirms adding the movie
-5. The movie goes into their personal collection
+3. User choose the desired content
+4. User confirms adding the content
+5. The movie/series goes into their personal collection
 6. Stats update automatically
 
 ## Commands

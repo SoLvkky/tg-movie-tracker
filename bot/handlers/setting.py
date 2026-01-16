@@ -11,6 +11,8 @@ router = Router()
 async def settings_menu(callback: types.CallbackQuery, session: AsyncSession):
     await callback.answer()
 
+    logger.info(f"User {callback.message.chat.id} used /settings")
+
     if(await get_adult(session=session, telegram_id=callback.message.chat.id)):\
         text_adult="✅ Adult - Show/Hide 18+ content"
     else:
@@ -33,6 +35,8 @@ async def adult_switch(callback: types.CallbackQuery, session: AsyncSession):
     await callback.answer()
 
     adult_user = await toggle_adult(session=session, telegram_id=callback.message.chat.id)
+
+    logger.info(f"User {callback.message.chat.id} toggled adult mode to {adult_user}")
 
     text_adult = "✅ Adult - Show/Hide 18+ content" if adult_user else "❌ Adult - Show/Hide 18+ content"
 

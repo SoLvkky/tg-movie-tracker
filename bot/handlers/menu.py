@@ -9,12 +9,14 @@ router = Router()
 
 @router.message(Command("menu"))
 async def cmd_start(message: Message) -> None:
-    logger.info(f"User @{message.chat.username} used /menu command")
+    logger.info(f"User @{message.chat.username} used /menu")
     await message.answer(text="Choose your option:", reply_markup=get_main_menu())
 
 @router.callback_query(F.data == "menu")
 async def go_to_menu(callback: types.CallbackQuery):
     await callback.answer()
+
+    logger.info(f"User @{callback.message.chat.username} used /menu")
 
     await callback.message.edit_text(
         text="Choose your option:",
@@ -24,6 +26,8 @@ async def go_to_menu(callback: types.CallbackQuery):
 @router.callback_query(F.data == "menu_delete")
 async def delete_menu(callback: types.CallbackQuery, bot: Bot):
     await callback.answer()
+
+    logger.info(f"User @{callback.message.chat.username} used /menu")
 
     send_task = bot(callback.message.answer(
         text="Choose your option:",

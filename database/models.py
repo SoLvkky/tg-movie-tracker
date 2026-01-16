@@ -1,4 +1,3 @@
-
 from sqlalchemy import (
     Column,
     Boolean,
@@ -8,6 +7,7 @@ from sqlalchemy import (
     ForeignKey,
     BigInteger,
     func,
+    text
 )
 from sqlalchemy.orm import (
     relationship,
@@ -23,29 +23,29 @@ class User(Base):
     telegram_id = Column(BigInteger, nullable=False, unique=True, index=True)
     username = Column(String, nullable=False)
     created_at = Column(DateTime(timezone=True), default=func.now())
-    adult = Column(Boolean, nullable=False, server_default=expression.false())
+    adult = Column(Boolean, nullable=False, default=expression.false(), server_default=expression.false())
+    start_code = Column(Integer, nullable=False, default=0, server_default=text("0"))
 
-    watched_movies = relationship("WatchedMovies", back_populates="user")
+    watched_content = relationship("WatchedContent", back_populates="user")
 
-class Movie(Base):
-    __tablename__ = "movies"
+class Content(Base):
+    __tablename__ = "content"
 
     id = Column(Integer, primary_key=True)
     tmdb_id = Column(Integer, unique=True, nullable=False, index=True)
     title = Column(String, nullable=False)
-    rating = Column(String)
+    media_type = Column(Integer)
     year = Column(Integer)
     genres = Column(JSONB)
-    duration = Column(Integer)
     poster = Column(String, nullable=True)
 
-class WatchedMovies(Base):
-    __tablename__ = "watched_movies"
+class WatchedContent(Base):
+    __tablename__ = "watched_content"
 
     id = Column(Integer, primary_key=True)
     user_id = Column(Integer, ForeignKey("users.id"), index=True)
-    movie_id = Column(Integer, ForeignKey("movies.id"))
+    content_id = Column(Integer, ForeignKey("content.id"))
     watched_at = Column(DateTime(timezone=True), default=func.now())
 
-    user = relationship("User", back_populates="watched_movies")
-    movie = relationship("Movie")
+    user = relationship("User", back_populates="watched_content")
+    movie = relationship("Content")

@@ -1,5 +1,23 @@
 # CHANGELOG
 
+## [1.0.0] - 2026-01-16
+
+### Added
+
+- Searching/adding TV series
+- Bot start code
+
+### Changed
+
+- The database structure, models and dependencies
+- Content handlers
+- Main Menu appearance
+- Search states
+
+### Fixed
+
+- Сase where pressing the "Back" button in the similar movies menu did not return to the movie itself
+
 ## [1.0.0-beta.3] - 2026-01-09
 
 ### Fixed

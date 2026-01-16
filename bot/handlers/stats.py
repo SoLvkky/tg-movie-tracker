@@ -17,10 +17,11 @@ async def user_stats(callback: types.CallbackQuery, session: AsyncSession):
 
     builder = back_button("menu")
 
-    logger.info(f"User @{callback.from_user.username} used /stats command")
+    logger.info(f"User @{callback.from_user.username} used /stats")
 
     await callback.message.edit_text(text=(
         f"👤 User: {callback.message.chat.username}\n\n"
-        f"🎬 Movies watched: {count}\n\n"
-        f"🎭 Favorite genres:\n{'\n'.join(f"{genre}: {count} movies" for genre, count in genres.items())}\n"
+        f"🎬 Movies watched: {count.get("movies")}\n"
+        f"📺 Series watched: {count.get("series")}\n\n"
+        f"🎭 Favorite genres:\n{'\n'.join(f"{genre}: {count}" for genre, count in genres.items())}\n"
     ), reply_markup=builder.as_markup())

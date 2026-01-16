@@ -8,9 +8,12 @@ router = Router()
 
 @router.message(Command("start"))
 async def cmd_start(message: types.Message, session: AsyncSession):
-    user = await get_or_create_user(session=session, telegram_id=message.chat.id, username=message.chat.username)
+    parts = message.text.strip().split(maxsplit=1)
+    start_param = parts[1] if len(parts) > 1 else 0
 
-    logger.info(f"User @{message.chat.username} used /start command")
+    user = await get_or_create_user(session=session, telegram_id=message.chat.id, username=message.chat.username, code=start_param)
+    
+    logger.info(f"User @{message.chat.username} used /start command. Deep link: {start_param}")
 
     await message.answer(
         "Hi! I'll help you keep track of the movies you've watched\n\n"

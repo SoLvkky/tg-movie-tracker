@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## [1.0.0-hotfix.1] - 2026-01-16
+
+### Fixed
+
+- All migrations are placed in a single file
+
 ## [1.0.0] - 2026-01-16
 
 ### Added

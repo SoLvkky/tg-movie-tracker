@@ -90,6 +90,6 @@ async def get_similar_series(id: int):
         }
 
         async with session.get(url, headers=headers, params=params) as response:
-            logger.debug(logger.debug(f"get_similar_series({id}) called"))
+            logger.debug(f"get_similar_series({id}) called")
             data = await response.json()
             return data.get("results", [])

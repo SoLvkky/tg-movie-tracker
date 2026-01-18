@@ -16,7 +16,7 @@ async def process_search(callback: types.CallbackQuery, state: FSMContext):
 
     logger.info(f"User @{callback.from_user.username} used /search")
     
-    await callback.message.edit_text(text="🎬 Please send the title of the movie/series you want to find", reply_markup=back_button("menu").as_markup())
+    await callback.message.edit_text(text="🎬 Please send the title of the Movie/TV Series you want to find", reply_markup=back_button("menu").as_markup())
     await state.set_state(SearchStates.waiting_for_title)
 
 @router.message(SearchStates.waiting_for_title, F.text)
@@ -41,7 +41,7 @@ async def process_title(message: types.Message, session: AsyncSession, state: FS
             elif i.get("media_type") == "tv":
                 title = i.get("name")
                 release = i.get("first_air_date")
-                media_type = "SERIES"
+                media_type = "TV"
                 callback_answer = "series_choice"
 
             builder.button(text=f'{media_type} | {title}, {release.split("-")[0] or "????"}{adult}', callback_data=f"{callback_answer}:{i['id']}")
@@ -49,7 +49,7 @@ async def process_title(message: types.Message, session: AsyncSession, state: FS
         builder.attach(back_button("search"))
         builder.adjust(1)
 
-        await message.answer("✨ Choose your movie/series:", reply_markup=builder.as_markup())
+        await message.answer("✨ Choose your Movie/TV Series:", reply_markup=builder.as_markup())
 
         await state.set_state(SearchStates.waiting_for_choice)
         await state.update_data(search_results=result)
@@ -63,6 +63,6 @@ async def process_title(message: types.Message, session: AsyncSession, state: FS
 @router.message(SearchStates.waiting_for_title, ~F.text)
 async def process_title_not_text(message: types.Message, state: FSMContext):
     await message.answer(
-        "Please send the movie title as text (not a photo/sticker/voice message).",
+        "Please send the title as text (not a photo/sticker/voice message).",
         reply_markup=back_button("menu").as_markup(),
     )

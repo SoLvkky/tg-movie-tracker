@@ -198,7 +198,7 @@ async def confirm_movie(callback: types.CallbackQuery, state: FSMContext, sessio
             logger.info(f"User {callback.message.chat.username} used /movie_similar for movie {movie_id}")
 
             await callback.message.answer(
-                "✨ Choose similar movie:",
+                "✨ Choose similar Movie:",
                 reply_markup=builder.as_markup()
             )
 
@@ -234,7 +234,7 @@ async def confirm_movie(callback: types.CallbackQuery, state: FSMContext, sessio
             elif i.get("media_type") == "tv":
                 title = i.get("name")
                 release = i.get("first_air_date")
-                media_type = "SERIES"
+                media_type = "TV"
                 callback_data = "series_choice"
 
             builder.button(text=f'{media_type} | {title}, {release.split("-")[0] or "????"}{adult}', callback_data=f"{callback_data}:{i['id']}")
@@ -243,7 +243,7 @@ async def confirm_movie(callback: types.CallbackQuery, state: FSMContext, sessio
         builder.adjust(1)
 
         await callback.message.answer(
-            text="✨ Choose your movie/series:", 
+            text="✨ Choose your Movie/TV Series:", 
             reply_markup=builder.as_markup()
         )
 
@@ -311,7 +311,7 @@ async def confirm_series(callback: types.CallbackQuery, state: FSMContext, sessi
             logger.info(f"User {callback.message.chat.username} used /series_similar for series {series_id}")
 
             await callback.message.answer(
-                "✨ Choose similar series:",
+                "✨ Choose similar TV Series:",
                 reply_markup=builder.as_markup()
             )
 
@@ -347,7 +347,7 @@ async def confirm_series(callback: types.CallbackQuery, state: FSMContext, sessi
             elif i.get("media_type") == "tv":
                 title = i.get("name")
                 release = i.get("first_air_date")
-                media_type = "SERIES"
+                media_type = "TV"
                 callback_data = "series_choice"
 
             builder.button(text=f'{media_type} | {title}, {release.split("-")[0] or "????"}{adult}', callback_data=f"{callback_data}:{i['id']}")
@@ -356,7 +356,7 @@ async def confirm_series(callback: types.CallbackQuery, state: FSMContext, sessi
         builder.adjust(1)
 
         await callback.message.answer(
-            text="✨ Choose your movie/series:", 
+            text="✨ Choose your movie/TV series:", 
             reply_markup=builder.as_markup()
         )
 

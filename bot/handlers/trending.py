@@ -17,7 +17,7 @@ async def trending_handler(callback: types.CallbackQuery, state: FSMContext):
     builder = InlineKeyboardBuilder()
 
     builder.button(text="🎬 Movies", callback_data="trending:movie")
-    builder.button(text="📺 Series", callback_data="trending:tv")
+    builder.button(text="📺 TV Series", callback_data="trending:tv")
     builder.attach(back_button("menu"))
     builder.adjust(2, 1)
 
@@ -40,21 +40,19 @@ async def trending_category(callback: types.CallbackQuery, state: FSMContext):
             if i.get("media_type") == "movie":
                 title = i.get("title")
                 release = i.get("release_date")
-                media_type = "MOVIE"
                 callback_answer = "movie_choice"
 
             elif i.get("media_type") == "tv":
                 title = i.get("name")
                 release = i.get("first_air_date")
-                media_type = "SERIES"
                 callback_answer = "series_choice"
 
-            builder.button(text=f'{media_type} | {title}, {release.split("-")[0] or "????"}{adult}', callback_data=f"{callback_answer}:{i['id']}")
+            builder.button(text=f'{title}, {release.split("-")[0] or "????"}{adult}', callback_data=f"{callback_answer}:{i['id']}")
 
         builder.attach(back_button("trending"))
         builder.adjust(1)
 
-        await callback.message.edit_text("✨ Choose your movie/series:", reply_markup=builder.as_markup())
+        await callback.message.edit_text("✨ Choose your content:", reply_markup=builder.as_markup())
 
         await state.set_state(SearchStates.waiting_for_choice)
         await state.update_data(search_results=result)

@@ -39,4 +39,4 @@ async def get_movies(callback: types.CallbackQuery, session: AsyncSession, state
     else:
         builder = back_button("menu")
 
-        await callback.message.edit_text(text="You have no movies/series!", reply_markup=builder.as_markup())
+        await callback.message.edit_text(text="You have no Movies/TV Series!", reply_markup=builder.as_markup())

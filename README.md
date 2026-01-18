@@ -3,13 +3,13 @@
 ![Python](https://img.shields.io/badge/Python-3.12-blue?logo=python)
 ![License](https://img.shields.io/badge/License-MIT-black?logo=github)
 
-A Telegram bot that helps users build a personal movies/series collection, track genre-based stats, and discover similar films — all without leaving Telegram
+A Telegram bot that helps users build a personal Movies/TV Series collection, track genre-based stats, and discover similar films — all without leaving Telegram
 
 The bot is designed to be fully interactive: almost all actions are performed via inline buttons, not text commands.
 
 ## Features
 
-- Add movies/series to your personal collection
+- Add Movies/TV Series to your personal collection
 - "Trending" section
 - View and manage what you’ve added
 - Genre analytics – see your most-watched genres and distribution

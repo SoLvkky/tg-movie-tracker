@@ -16,7 +16,7 @@ async def cmd_start(message: types.Message, session: AsyncSession):
     logger.info(f"User @{message.chat.username} used /start. Deep link: {start_param}")
 
     await message.answer(
-        "Hi! I'll help you keep track of the movies you've watched\n\n"
+        "Hi! I'll help you keep track of the Movies and TV Series you've watched\n\n"
         "Commands:\n"
         "/menu - Main Menu"
     )

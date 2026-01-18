@@ -22,6 +22,6 @@ async def user_stats(callback: types.CallbackQuery, session: AsyncSession):
     await callback.message.edit_text(text=(
         f"👤 User: {callback.message.chat.username}\n\n"
         f"🎬 Movies watched: {count.get("movies")}\n"
-        f"📺 Series watched: {count.get("series")}\n\n"
+        f"📺 TV Series watched: {count.get("series")}\n\n"
         f"🎭 Favorite genres:\n{'\n'.join(f"{genre}: {count}" for genre, count in genres.items())}\n"
     ), reply_markup=builder.as_markup())

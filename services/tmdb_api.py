@@ -57,7 +57,7 @@ async def get_series_details(id: int):
         async with session.get(url, headers=headers, params=params) as response:
             logger.debug(f"get_series_details({id}) called")
             return await response.json()
-        
+
 async def get_similar_movie(id: int):
     async with aiohttp.ClientSession() as session:
         url = f"{TMDB_BASE_URL}/movie/{id}/similar"
@@ -92,4 +92,22 @@ async def get_similar_series(id: int):
         async with session.get(url, headers=headers, params=params) as response:
             logger.debug(f"get_similar_series({id}) called")
             data = await response.json()
-            return data.get("results", [])
+            return data.get("results", [])        
+        
+async def get_trending(trending_type: str):
+    async with aiohttp.ClientSession() as session:
+        url = f"{TMDB_BASE_URL}/trending/{trending_type}/week"
+
+        headers = {
+            "accept": "application/json",
+            "Authorization": f"Bearer {settings.TMDB_APIKEY}"
+        }
+
+        params = {
+            "language": "en-US"
+        }
+
+        async with session.get(url, headers=headers, params=params) as response:
+            logger.debug(f"get_trending_series({trending_type}) called")
+            data = await response.json()
+            return data.get("results")

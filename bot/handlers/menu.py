@@ -2,6 +2,7 @@ import asyncio
 from aiogram import F, Router, types, Bot
 from aiogram.types import Message
 from aiogram.filters import Command
+from aiogram.fsm.context import FSMContext
 from bot.keyboards.main_menu import get_main_menu
 from bot.logger import logger
 
@@ -24,8 +25,9 @@ async def go_to_menu(callback: types.CallbackQuery):
     )
 
 @router.callback_query(F.data == "menu_delete")
-async def delete_menu(callback: types.CallbackQuery, bot: Bot):
+async def delete_menu(callback: types.CallbackQuery, bot: Bot, state: FSMContext):
     await callback.answer()
+    await state.clear()
 
     logger.info(f"User @{callback.message.chat.username} used /menu")
 

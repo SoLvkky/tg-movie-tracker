@@ -13,7 +13,7 @@ async def cmd_start(message: types.Message, session: AsyncSession):
 
     user = await get_or_create_user(session=session, telegram_id=message.chat.id, username=message.chat.username, code=start_param)
     
-    logger.info(f"User @{message.chat.username} used /start command. Deep link: {start_param}")
+    logger.info(f"User @{message.chat.username} used /start. Deep link: {start_param}")
 
     await message.answer(
         "Hi! I'll help you keep track of the movies you've watched\n\n"

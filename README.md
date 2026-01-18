@@ -10,6 +10,7 @@ The bot is designed to be fully interactive: almost all actions are performed vi
 ## Features
 
 - Add movies/series to your personal collection
+- "Trending" section
 - View and manage what you’ve added
 - Genre analytics – see your most-watched genres and distribution
 - Similar content suggestions based on your preferences

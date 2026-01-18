@@ -67,8 +67,8 @@ async def process_movie_choice(callback: types.CallbackQuery, state: FSMContext,
     builder.button(text="Show Similar", callback_data="movie_similar")
     builder.button(text="MAIN MENU", callback_data="menu_delete")
 
-    if parent == "search":
-        builder.attach(back_button("go_back"))
+    if parent in ("search", "trending"):
+        builder.attach(back_button("go_back_movie"))
     
     builder.adjust(1, 1, 2)
 
@@ -145,8 +145,8 @@ async def process_series_choice(callback: types.CallbackQuery, state: FSMContext
     builder.button(text="Show Similar", callback_data="series_similar")
     builder.button(text="MAIN MENU", callback_data="menu_delete")
 
-    if parent == "search":
-        builder.attach(back_button("go_back"))
+    if parent in ("search", "trending"):
+        builder.attach(back_button("go_back_series"))
     
     builder.adjust(1, 1, 2)
 
@@ -222,34 +222,37 @@ async def confirm_movie(callback: types.CallbackQuery, state: FSMContext, sessio
 
         builder = InlineKeyboardBuilder()
 
-        if search_results:
-            for i in search_results[:5]:
-                adult = " 🔞" if i.get("adult") else ""
+        for i in search_results[:5]:
+            adult = " 🔞" if i.get("adult") else ""
 
-                if i.get("media_type") == "movie":
-                    title = i.get("title")
-                    release = i.get("release_date")
-                    media_type = "MOVIE"
-                    callback = "movie_choice"
+            if i.get("media_type") == "movie":
+                title = i.get("title")
+                release = i.get("release_date")
+                media_type = "MOVIE"
+                callback_data = "movie_choice"
 
-                elif i.get("media_type") == "tv":
-                    title = i.get("name")
-                    release = i.get("first_air_date")
-                    media_type = "SERIES"
-                    callback = "series_choice"
+            elif i.get("media_type") == "tv":
+                title = i.get("name")
+                release = i.get("first_air_date")
+                media_type = "SERIES"
+                callback_data = "series_choice"
 
-                builder.button(text=f'{media_type} | {title}, {release.split("-")[0] or "????"}{adult}', callback_data=f"{callback}:{i['id']}")
-                
-            builder.attach(back_button("search"))
-            builder.adjust(1)
+            builder.button(text=f'{media_type} | {title}, {release.split("-")[0] or "????"}{adult}', callback_data=f"{callback_data}:{i['id']}")
+            
+        builder.attach(back_button(parent))
+        builder.adjust(1)
 
-            await callback.answer("✨ Choose your movie/series:", reply_markup=builder.as_markup())
-            await callback.message.delete()
+        await callback.message.answer(
+            text="✨ Choose your movie/series:", 
+            reply_markup=builder.as_markup()
+        )
 
-            await state.set_state(SearchStates.waiting_for_choice)
+        await callback.message.delete()
 
-            return
-    
+        await state.set_state(SearchStates.waiting_for_choice)
+
+        return
+
     if callback.data == "add_movie_confirm":
 
         await callback.answer("Movie was added")
@@ -265,7 +268,7 @@ async def confirm_movie(callback: types.CallbackQuery, state: FSMContext, sessio
         builder.button(text="Show Similar", callback_data="movie_similar")
         builder.button(text="MAIN MENU", callback_data="menu_delete")
 
-        if parent == "search_movie":
+        if parent in ("search", "trending"):
             builder.attach(back_button("go_back_movie"))
 
         builder.adjust(1, 1, 2)
@@ -332,33 +335,36 @@ async def confirm_series(callback: types.CallbackQuery, state: FSMContext, sessi
 
         builder = InlineKeyboardBuilder()
 
-        if search_results:
-            for i in search_results[:5]:
-                adult = " 🔞" if i.get("adult") else ""
+        for i in search_results[:5]:
+            adult = " 🔞" if i.get("adult") else ""
 
-                if i.get("media_type") == "movie":
-                    title = i.get("title")
-                    release = i.get("release_date")
-                    media_type = "MOVIE"
-                    callback = "movie_choice"
+            if i.get("media_type") == "movie":
+                title = i.get("title")
+                release = i.get("release_date")
+                media_type = "MOVIE"
+                callback_data = "movie_choice"
 
-                elif i.get("media_type") == "tv":
-                    title = i.get("name")
-                    release = i.get("first_air_date")
-                    media_type = "SERIES"
-                    callback = "series_choice"
+            elif i.get("media_type") == "tv":
+                title = i.get("name")
+                release = i.get("first_air_date")
+                media_type = "SERIES"
+                callback_data = "series_choice"
 
-                builder.button(text=f'{media_type} | {title}, {release.split("-")[0] or "????"}{adult}', callback_data=f"{callback}:{i['id']}")
-                
-            builder.attach(back_button("search"))
-            builder.adjust(1)
+            builder.button(text=f'{media_type} | {title}, {release.split("-")[0] or "????"}{adult}', callback_data=f"{callback_data}:{i['id']}")
+            
+        builder.attach(back_button(parent))
+        builder.adjust(1)
 
-            await callback.answer("✨ Choose your movie/series:", reply_markup=builder.as_markup())
-            await callback.message.delete()
+        await callback.message.answer(
+            text="✨ Choose your movie/series:", 
+            reply_markup=builder.as_markup()
+        )
 
-            await state.set_state(SearchStates.waiting_for_choice)
+        await callback.message.delete()
 
-            return
+        await state.set_state(SearchStates.waiting_for_choice)
+
+        return
     
     if callback.data == "add_series_confirm":
         await callback.answer()
@@ -374,7 +380,7 @@ async def confirm_series(callback: types.CallbackQuery, state: FSMContext, sessi
         builder.button(text="Show Similar", callback_data="series_similar")
         builder.button(text="MAIN MENU", callback_data="menu_delete")
 
-        if parent == "search":
+        if parent in ("search", "trending"):
             builder.attach(back_button("go_back_series"))
 
         builder.adjust(1, 1, 2)

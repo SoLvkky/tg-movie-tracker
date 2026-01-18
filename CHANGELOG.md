@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## [1.0.1] - 2026-01-18
+
+### Added
+
+- "Trending" section: A list of movies and TV series that are trending this week
+
+### Fixed
+
+- Сase where the BACK button was not working correctly on the movies and TV series page.
+
 ## [1.0.0-hotfix.1] - 2026-01-16
 
 ### Fixed

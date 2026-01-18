@@ -24,9 +24,9 @@ async def search_content(query: str, adult_user: bool):
             data = await response.json()
             return data.get("results", [])
 
-async def get_movie_details(id: int):
+async def get_content(content_type: str, id: int, method = ""):
     async with aiohttp.ClientSession() as session:
-        url = f"{TMDB_BASE_URL}/movie/{id}"
+        url = f"{TMDB_BASE_URL}/{content_type}/{id}{method}"
 
         headers = {
             "accept": "application/json",
@@ -37,62 +37,14 @@ async def get_movie_details(id: int):
             "language": "en-US"
         }
         
-        async with session.get(url, headers=headers, params=params) as response:
-            logger.debug(f"get_movie_details({id}) called")
-            return await response.json()
-        
-async def get_series_details(id: int):
-    async with aiohttp.ClientSession() as session:
-        url = f"{TMDB_BASE_URL}/tv/{id}"
-
-        headers = {
-            "accept": "application/json",
-            "Authorization": f"Bearer {settings.TMDB_APIKEY}"
-        }
-
-        params = {
-            "language": "en-US"
-        }
-
-        async with session.get(url, headers=headers, params=params) as response:
-            logger.debug(f"get_series_details({id}) called")
-            return await response.json()
-
-async def get_similar_movie(id: int):
-    async with aiohttp.ClientSession() as session:
-        url = f"{TMDB_BASE_URL}/movie/{id}/similar"
-
-        headers = {
-            "accept": "application/json",
-            "Authorization": f"Bearer {settings.TMDB_APIKEY}"
-        }
-
-        params = {
-            "language": "en-US"
-        }
-
-        async with session.get(url, headers=headers, params=params) as response:
-            logger.debug(f"get_similar_movie({id}) called")
+        async with session.get(url, headers=headers) as response:
+            logger.debug(f"get_content({id}) called")
             data = await response.json()
-            return data.get("results", [])
-        
-async def get_similar_series(id: int):
-    async with aiohttp.ClientSession() as session:
-        url = f"{TMDB_BASE_URL}/tv/{id}/similar"
-
-        headers = {
-            "accept": "application/json",
-            "Authorization": f"Bearer {settings.TMDB_APIKEY}"
-        }
-
-        params = {
-            "language": "en-US"
-        }
-
-        async with session.get(url, headers=headers, params=params) as response:
-            logger.debug(f"get_similar_series({id}) called")
-            data = await response.json()
-            return data.get("results", [])        
+            match method:
+                case "":
+                    return data
+                case _:
+                    return data.get("results")    
         
 async def get_trending(trending_type: str):
     async with aiohttp.ClientSession() as session:

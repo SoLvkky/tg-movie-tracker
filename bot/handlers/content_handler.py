@@ -5,7 +5,7 @@ from bot.states.search_states import SearchStates
 from bot.keyboards.back_button import back_button
 from database.crud import *
 from datetime import datetime
-from services.tmdb_api import get_movie_details, get_series_details, get_similar_movie, get_similar_series, search_content
+from services.tmdb_api import get_content
 
 router = Router()
 
@@ -19,7 +19,7 @@ async def process_movie_choice(callback: types.CallbackQuery, state: FSMContext,
 
     movie_id = callback.data.split(":", 1)[1]
 
-    movie = await get_movie_details(movie_id)
+    movie = await get_content(content_type="movie", id=movie_id)
 
     poster_path = movie.get("poster_path")
     poster = f"https://image.tmdb.org/t/p/w500{poster_path}" if poster_path else "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRoWcWg0E8pSjBNi0TtiZsqu8uD2PAr_K11DA&s"
@@ -38,8 +38,8 @@ async def process_movie_choice(callback: types.CallbackQuery, state: FSMContext,
         except ValueError:
             year = None
 
-    for i in movie["genres"]:
-        genres.append(i["name"])
+    for i in movie.get("genres"):
+        genres.append(i.get("name"))
 
     await get_or_create_show(
         session=session,
@@ -96,7 +96,7 @@ async def process_series_choice(callback: types.CallbackQuery, state: FSMContext
 
     series_id = callback.data.split(":", 1)[1]
 
-    series = await get_series_details(series_id)
+    series = await get_content(content_type="tv", id=series_id)
 
     poster_path = series.get("poster_path")
     poster = f"https://image.tmdb.org/t/p/w500{poster_path}" if poster_path else "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRoWcWg0E8pSjBNi0TtiZsqu8uD2PAr_K11DA&s"
@@ -116,8 +116,8 @@ async def process_series_choice(callback: types.CallbackQuery, state: FSMContext
         except ValueError:
             year = None
 
-    for i in series["genres"]:
-        genres.append(i["name"])
+    for i in series.get("genres"):
+        genres.append(i.get("name"))
 
     await get_or_create_show(
         session=session,
@@ -178,7 +178,7 @@ async def confirm_movie(callback: types.CallbackQuery, state: FSMContext, sessio
             await callback.message.answer("Movie ID missing, state is empty.")
             return
 
-        result = await get_similar_movie(movie_id)
+        result = await get_content(content_type="movie", id=movie_id, method="/similar")
         builder = InlineKeyboardBuilder()
 
         if result:
@@ -291,7 +291,7 @@ async def confirm_series(callback: types.CallbackQuery, state: FSMContext, sessi
             await callback.message.answer("Series ID missing, state is empty.")
             return
 
-        result = await get_similar_series(series_id)
+        result = await get_content(content_type="tv", id=series_id, method="/similar")
         builder = InlineKeyboardBuilder()
 
         if result:

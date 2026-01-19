@@ -25,7 +25,7 @@ async def get_movies(callback: types.CallbackQuery, session: AsyncSession, state
             media_type = await get_media_type(session, m["tmdb_id"])
             match media_type:
                 case 1: callback_answer = "movie_choice"
-                case 2: callback_answer = "series_choice"
+                case 2: callback_answer = "tv_choice"
             builder.button(text=f'{m["title"]}, {m["year"]}', callback_data=str(f"{callback_answer}:{m['tmdb_id']}"))
 
         builder.attach(back_button("menu"))

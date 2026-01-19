@@ -32,19 +32,13 @@ async def process_title(message: types.Message, session: AsyncSession, state: FS
         for i in result[:5]:
             adult = " 🔞" if i.get("adult") else ""
 
-            if i.get("media_type") == "movie":
-                title = i.get("title")
-                release = i.get("release_date")
-                media_type = "MOVIE"
-                callback_answer = "movie_choice"
+            match i.get("media_type"):
+                case "movie":
+                    title, release, media_type, c_data = i.get("title"), i.get("release_date"), "MOVIE", "movie_choice"
+                case "tv":
+                    title, release, media_type, c_data = i.get("name"), i.get("first_air_date"), "TV", "tv_choice"
 
-            elif i.get("media_type") == "tv":
-                title = i.get("name")
-                release = i.get("first_air_date")
-                media_type = "TV"
-                callback_answer = "series_choice"
-
-            builder.button(text=f'{media_type} | {title}, {release.split("-")[0] or "????"}{adult}', callback_data=f"{callback_answer}:{i['id']}")
+            builder.button(text=f'{media_type} | {title}, {release.split("-")[0] or "????"}{adult}', callback_data=f"{c_data}:{i.get('id')}")
 
         builder.attach(back_button("search"))
         builder.adjust(1)

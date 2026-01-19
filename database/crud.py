@@ -3,6 +3,7 @@ from database.models import User, Content, WatchedContent
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, delete, JSON, func, text
 
+# User CRUD
 async def get_or_create_user(session: AsyncSession, telegram_id: int, username: str, code: int | None = None):
     logger.debug(f"get_or_create_user(telegram_id={telegram_id}, username={username}, start_code={code}) called")
 
@@ -50,6 +51,48 @@ async def get_adult(session: AsyncSession, telegram_id: int) -> bool:
 
     return bool(adult)
 
+async def get_user_movie_count(session: AsyncSession, user_id: int) -> int:
+    logger.debug(f"get_user_movie_count(user_id={user_id}) called")
+
+    movies = await session.scalar(
+        select(func.count(WatchedContent.id))
+        .join(Content, WatchedContent.content_id == Content.id)
+        .where(
+            WatchedContent.user_id == user_id,
+            Content.media_type == 1
+        )
+    )
+
+    series = await session.scalar(
+        select(func.count(WatchedContent.id))
+        .join(Content, WatchedContent.content_id == Content.id)
+        .where(
+            WatchedContent.user_id == user_id,
+            Content.media_type == 2
+        )
+    )
+    return {"movies": movies, "series": series} or {"movies": 0, "series": 0}
+
+async def get_top_genres(session: AsyncSession, user_id: int):
+    logger.debug(f"get_top_genres(user_id={user_id}) called")
+    
+    genre_table = func.jsonb_array_elements_text(Content.genres).table_valued("value").lateral()
+
+    res = await session.execute(
+        select(
+            genre_table.c.value.label("genre"),
+            func.count(WatchedContent.id).label("count")
+        )
+        .select_from(Content)
+        .join(WatchedContent, WatchedContent.content_id == Content.id)
+        .join(genre_table, text("true"))
+        .where(WatchedContent.user_id == user_id)
+        .group_by(genre_table.c.value)
+        .order_by(func.count(WatchedContent.id).desc())
+    )
+    return res.all()
+
+# Show CRUD
 async def get_or_create_show(session: AsyncSession, tmdb_id: int, title: str, genres: JSON, year: int, poster: str, media_type: int):
     logger.debug(f"get_or_create_show(tmdb_id={tmdb_id}, title={title}, genres={genres}, year={year}, poster={poster}, media_type={media_type}) called")
 
@@ -70,6 +113,17 @@ async def get_or_create_show(session: AsyncSession, tmdb_id: int, title: str, ge
     logger.info(f"Content {tmdb_id} : {title} was added to database")
     return content
 
+async def get_media_type(session: AsyncSession, tmdb_id: int) -> str | None:
+    logger.debug(f"get_media_type(tmdb_id={tmdb_id}) called")
+
+    result = await session.scalar(
+        select(Content.media_type)
+        .where(Content.tmdb_id == tmdb_id)
+        .limit(1)
+    )
+    return result
+
+# Watched CRUD
 async def add_watched(session: AsyncSession, user_id: int, content_id: int):
     logger.debug(f"add_watched(user_id={user_id}, content_id={content_id}) called")
 
@@ -142,54 +196,3 @@ async def has_watched(session: AsyncSession, user_id: int, content_id: int) -> b
     )
 
     return res is not None
-
-async def get_media_type(session: AsyncSession, tmdb_id: int) -> str | None:
-    logger.debug(f"get_media_type(tmdb_id={tmdb_id}) called")
-
-    result = await session.scalar(
-        select(Content.media_type)
-        .where(Content.tmdb_id == tmdb_id)
-        .limit(1)
-    )
-    return result
-
-async def get_user_movie_count(session: AsyncSession, user_id: int) -> int:
-    logger.debug(f"get_user_movie_count(user_id={user_id}) called")
-
-    movies = await session.scalar(
-        select(func.count(WatchedContent.id))
-        .join(Content, WatchedContent.content_id == Content.id)
-        .where(
-            WatchedContent.user_id == user_id,
-            Content.media_type == 1
-        )
-    )
-
-    series = await session.scalar(
-        select(func.count(WatchedContent.id))
-        .join(Content, WatchedContent.content_id == Content.id)
-        .where(
-            WatchedContent.user_id == user_id,
-            Content.media_type == 2
-        )
-    )
-    return {"movies": movies, "series": series} or {"movies": 0, "series": 0}
-
-async def get_top_genres(session: AsyncSession, user_id: int):
-    logger.debug(f"get_top_genres(user_id={user_id}) called")
-    
-    genre_table = func.jsonb_array_elements_text(Content.genres).table_valued("value").lateral()
-
-    res = await session.execute(
-        select(
-            genre_table.c.value.label("genre"),
-            func.count(WatchedContent.id).label("count")
-        )
-        .select_from(Content)
-        .join(WatchedContent, WatchedContent.content_id == Content.id)
-        .join(genre_table, text("true"))
-        .where(WatchedContent.user_id == user_id)
-        .group_by(genre_table.c.value)
-        .order_by(func.count(WatchedContent.id).desc())
-    )
-    return res.all()

@@ -188,7 +188,7 @@ async def confirm_content(callback: types.CallbackQuery, state: FSMContext, sess
 
             builder = InlineKeyboardBuilder()
 
-            for i in search_results:
+            for i in search_results[:10]:
                 adult = " 🔞" if i.get("adult") else ""
 
                 match i.get("media_type"):

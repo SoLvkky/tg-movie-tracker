@@ -30,7 +30,7 @@ async def process_title(message: types.Message, session: AsyncSession, state: FS
     builder = InlineKeyboardBuilder()
 
     if result:
-        for i in result[:5]:
+        for i in result[:10]:
             adult = " 🔞" if i.get("adult") else ""
 
             match i.get("media_type"):

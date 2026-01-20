@@ -1,0 +1,87 @@
+{
+    "adult_status": {
+        "true": "✅ Erwachsene – Inhalte ab 18 Jahren anzeigen/ausblenden",
+        "false": "❌ Erwachsene – Inhalte ab 18 Jahren anzeigen/ausblenden"
+    },
+    "caption": {
+        "runtime": "🕒 Dauer:",
+        "release": "🗓️ Erscheinungsjahr:",
+        "rating": "⭐ Bewertung:",
+        "genres": "🎭 Genres:",
+        "plot": "📜 Rezension:",
+        "episodes": "Episoden in",
+        "seasons": "Staffeln",
+        "minutes": "Minuten"
+    },
+    "choose": {
+        "similar": "✨ Ähnliche Inhalte auswählen:",
+        "content": "✨ Wählen Sie Ihren Film/Ihre Fernsehserie aus:",
+        "category": "✨ Wählen Sie die gewünschte Kategorie aus:",
+        "language": "🌎 Wählen Sie Ihre bevorzugte Sprache:"
+    },
+    "collection": {
+        "add": "Inhalte wurden Ihrer Sammlung hinzugefügt.",
+        "remove": "Inhalte wurden aus Ihrer Sammlung entfernt.",
+        "text": "Ihre Sammlung:",
+        "empty": "Sie haben noch keine Filme/Fernsehserien angesehen."
+    },
+    "go_back": "НАЗАД",
+    "language": {
+        "chosen": {
+            "en": "🇺🇸 Selected language: English",
+            "es": "🇪🇸 Idioma seleccionado: Español",
+            "fr": "🇫🇷 Langue sélectionnée : Français",
+            "de": "🇩🇪 Ausgewählte Sprache: Deutsch",
+            "ru": "🇷🇺 Выбранный язык: Русский"
+        },
+        "set": {
+            "en": "🇺🇸 Englisch",
+            "es": "🇪🇸 Spanisch",
+            "fr": "🇫🇷 Französisch",
+            "de": "🇩🇪 Deutsch",
+            "ru": "🇷🇺 Russisch"
+        },
+        "changed": "Sprache geändert",
+        "not_changed": "Die ausgewählte Sprache befindet sich in der Entwicklung. Die Sprache wurde nicht geändert."
+    },
+    "main_menu": "HAUPTMENÜ",
+    "menu": {
+        "search": "🔍 Suche",
+        "trending": "✨ Im Trend",
+        "collection": "📋 Inhaltssammlung",
+        "stats": "📊 Statistiken",
+        "settings": "⚙️ Einstellungen"
+    },
+    "menu_text": "Wählen Sie die gewünschte Option aus:",
+    "no_previous": "Keine vorherigen Ergebnisse",
+    "no_similar": "Ähnliche Inhalte nicht gefunden",
+    "search_not_found": "❌ Inhalt nicht gefunden. Bitte versuchen Sie es mit einem präziseren Titel",
+    "search_title": "🎬 Bitte senden Sie uns den Namen des Films/der Fernsehserie, den/die Sie suchen",
+    "search_wrong_type": "Bitte senden Sie den Titel als Text (nicht als Foto/Aufkleber).",
+    "settings": {
+        "adult": "In den Erwachsenenmodus wechseln",
+        "language": "Sprache ändern",
+        "text": "Legen Sie Ihre Präferenzen fest:"
+    },
+    "show_similar": "🔍 Ähnlich",
+    "start": "Hallo! Ich helfe dir, den Überblick über deine gesehenen Filme und Serien zu behalten.\n\nBefehle:\n/menu – Hauptmenü",
+    "state_empty": "Content-ID fehlt",
+    "stats": {
+        "user": "👤 Benutzer:",
+        "movies": "🎬 Filme:",
+        "tv": "📺 Fernsehserie:",
+        "genres": "🎭 Lieblingsgenres:"
+    },
+    "trending": {
+        "choose": {
+            "movies": "🎬 Filme",
+            "tv": "📺 Fernsehserie"
+        }
+    },
+    "type_movie": "FILM",
+    "type_tv": "SERIE",
+    "watch_status": {
+        "true": "✅ Angesehen - Bearbeiten",
+        "false": "❌ Nicht angesehen - Bearbeiten"
+    }
+}

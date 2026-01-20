@@ -8,7 +8,7 @@
         "release": "🗓️ Release year:",
         "rating": "⭐ Rating:",
         "genres": "🎭 Genres:",
-        "plot": "📜 Plot:",
+        "plot": "📜 Overview:",
         "episodes": "episodes in",
         "seasons": "seasons",
         "minutes": "minutes"
@@ -20,8 +20,8 @@
         "language": "🌎 Choose preferred language:"
     },
     "collection": {
-        "add": "Content was added to your Collection",
-        "remove": "Content was removed from your Collection",
+        "add": "Content has been added to your collection.",
+        "remove": "Content has been removed from your Collection",
         "text": "Your collection:",
         "empty": "You have no Movies/TV Series!"
     },
@@ -36,9 +36,9 @@
         },
         "set": {
             "en": "🇺🇸 English",
-            "es": "🇪🇸 Spanish (Soon)",
-            "fr": "🇫🇷 French (Soon)",
-            "de": "🇩🇪 German (Soon)",
+            "es": "🇪🇸 Spanish",
+            "fr": "🇫🇷 French",
+            "de": "🇩🇪 German",
             "ru": "🇷🇺 Russian"
         },
         "changed": "Language was changed",
@@ -57,7 +57,7 @@
     "no_similar": "No similar content found.",
     "search_not_found": "❌ Content not found. Try a more precise name",
     "search_title": "🎬 Please send the title of the Movie/TV Series you want to find",
-    "search_wrong_type": "Please send the title as text (not a photo/sticker/voice message).",
+    "search_wrong_type": "Please send the title as text (not a photo/sticker)",
     "settings": {
         "adult": "Switch Adult Mode",
         "language": "Change Language",

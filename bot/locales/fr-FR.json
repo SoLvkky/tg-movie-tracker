@@ -1,0 +1,87 @@
+{
+    "adult_status": {
+        "true": "✅ Adulte - Afficher/Masquer le contenu 18+",
+        "false": "❌ Adulte - Afficher/Masquer le contenu 18+"
+    },
+    "caption": {
+        "runtime": "🕒 Durée :",
+        "release": "🗓️ Année de sortie :",
+        "rating": "⭐ Évaluation :",
+        "genres": "🎭 Genres :",
+        "plot": "📜 Aperçu :",
+        "episodes": "épisodes en",
+        "seasons": "saisons",
+        "minutes": "minutes"
+    },
+    "choose": {
+        "similar": "✨ Sélectionnez un contenu similaire :",
+        "content": "✨ Sélectionnez votre film/série :",
+        "category": "✨ Sélectionnez la catégorie souhaitée :",
+        "language": "🌎 Sélectionnez votre langue préférée :"
+    },
+    "collection": {
+        "add": "Du contenu a été ajouté à votre collection",
+        "remove": "Le contenu a été supprimé de votre collection",
+        "text": "Votre collection :",
+        "empty": "Vous n'avez regardé aucun film/série"
+    },
+    "go_back": "DOS",
+    "language": {
+        "chosen": {
+            "en": "🇺🇸 Selected language: English",
+            "es": "🇪🇸 Idioma seleccionado: Español",
+            "fr": "🇫🇷 Langue sélectionnée : Français",
+            "de": "🇩🇪 Ausgewählte Sprache: Deutsch",
+            "ru": "🇷🇺 Выбранный язык: Русский"
+        },
+        "set": {
+            "en": "🇺🇸 Anglais",
+            "es": "🇪🇸 Espagnol",
+            "fr": "🇫🇷 Français",
+            "de": "🇩🇪 Allemand",
+            "ru": "🇷🇺 Russe"
+        },
+        "changed": "La langue a changé",
+        "not_changed": "La langue sélectionnée est en cours de développement. La langue n'a pas été modifiée."
+    },
+    "main_menu": "MENU",
+    "menu": {
+        "search": "🔍 Recherche",
+        "trending": "✨ Tendance",
+        "collection": "📋 Ma collection",
+        "stats": "📊 Statistiques",
+        "settings": "⚙️ Paramètres"
+    },
+    "menu_text": "Choisissez votre option",
+    "no_previous": "Aucun résultat précédent",
+    "no_similar": "Contenu similaire introuvable",
+    "search_not_found": "❌ Contenu introuvable. Veuillez essayer un titre plus précis",
+    "search_title": "🎬 Veuillez indiquer le nom du film ou de la série que vous recherchez",
+    "search_wrong_type": "Veuillez envoyer le titre sous forme de texte (et non de photo/autocollant)",
+    "settings": {
+        "adult": "Passer en mode adulte",
+        "language": "Changer de langue",
+        "text": "Définissez vos préférences :"
+    },
+    "show_similar": "🔍 Similaire",
+    "start": "Salut ! Je vais vous aider à garder une trace des films et séries que vous avez regardés.\n\nCommandes :\n/menu - Menu principal",
+    "state_empty": "L'identifiant du contenu est manquant",
+    "stats": {
+        "user": "👤 Utilisateur :",
+        "movies": "🎬 Films :",
+        "tv": "📺 Séries :",
+        "genres": "🎭 Genres préférés :"
+    },
+    "trending": {
+        "choose": {
+            "movies": "🎬 Films",
+            "tv": "📺 Séries"
+        }
+    },
+    "type_movie": "FILM",
+    "type_tv": "SÉRIE",
+    "watch_status": {
+        "true": "✅ Visionné - Modifier",
+        "false": "❌ Non Visionné - Modifier"
+    }
+}

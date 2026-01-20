@@ -1,0 +1,87 @@
+{
+    "adult_status": {
+        "true": "✅ Adultos - Mostrar/Ocultar contenido para mayores de 18 años",
+        "false": "❌ Adultos - Mostrar/Ocultar contenido para mayores de 18 años"
+    },
+    "caption": {
+        "runtime": "🕒 Duración:",
+        "release": "🗓️ Año de lanzamiento:",
+        "rating": "⭐ Calificación:",
+        "genres": "🎭 Géneros:",
+        "plot": "📜 Descripción:",
+        "episodes": "episodios en",
+        "seasons": "temporadas",
+        "minutes": "minutos"
+    },
+    "choose": {
+        "similar": "✨ Seleccione contenido similar:",
+        "content": "✨ Selecciona tu película/serie:",
+        "category": "✨ Seleccione la categoría deseada:",
+        "language": "🌎 Seleccione su idioma preferido:"
+    },
+    "collection": {
+        "add": "Se ha añadido contenido a tu colección",
+        "remove": "Se ha eliminado contenido de tu colección.",
+        "text": "Tu colección:",
+        "empty": "No has visto ninguna película/serie"
+    },
+    "go_back": "REGRESAR",
+    "language": {
+        "chosen": {
+            "en": "🇺🇸 Selected language: English",
+            "es": "🇪🇸 Idioma seleccionado: Español",
+            "fr": "🇫🇷 Langue sélectionnée : Français",
+            "de": "🇩🇪 Ausgewählte Sprache: Deutsch",
+            "ru": "🇷🇺 Выбранный язык: Русский"
+        },
+        "set": {
+            "en": "🇺🇸 Inglés",
+            "es": "🇪🇸 Español",
+            "fr": "🇫🇷 Francés",
+            "de": "🇩🇪 Alemán",
+            "ru": "🇷🇺 Ruso"
+        },
+        "changed": "El idioma cambió",
+        "not_changed": "El idioma seleccionado está en desarrollo. No se ha modificado."
+    },
+    "main_menu": "MENÚ",
+    "menu": {
+        "search": "🔍 Buscar",
+        "trending": "✨ Tendencias",
+        "collection": "📋 Mi colección",
+        "stats": "📊 Estadísticas",
+        "settings": "⚙️ Configuración"
+    },
+    "menu_text": "Seleccione la opción requerida:",
+    "no_previous": "No hay resultados previos",
+    "no_similar": "No se encontró contenido similar",
+    "search_not_found": "❌ Contenido no encontrado. Intente con un título más específico.",
+    "search_title": "🎬 Por favor envíe el nombre de la Película/Serie que desea encontrar",
+    "search_wrong_type": "Por favor envíe el título como texto (no una foto/pegatina)",
+    "settings": {
+        "adult": "Cambiar al modo adulto",
+        "language": "Cambiar idioma",
+        "text": "Establezca sus preferencias:"
+    },
+    "show_similar": "🔍 Similares",
+    "start": "¡Hola! Te ayudaré a llevar un registro de las películas y series que has visto.\n\nComandos:\n/menu - Menú principal",
+    "state_empty": "Falta el ID de contenido",
+    "stats": {
+        "user": "👤 Usuario:",
+        "movies": "🎬 Películas vistas:",
+        "tv": "📺 Series vistas:",
+        "genres": "🎭 Géneros favoritos:"
+    },
+    "trending": {
+        "choose": {
+            "movies": "🎬 Películas",
+            "tv": "📺 Series"
+        }
+    },
+    "type_movie": "PELÍCULA",
+    "type_tv": "SERIE",
+    "watch_status": {
+        "true": "✅ Visto - Editar",
+        "false": "❌ No visto - Editar"
+    }
+}

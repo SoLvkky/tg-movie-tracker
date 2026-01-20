@@ -26,12 +26,13 @@ async def trending_handler(callback: types.CallbackQuery, state: FSMContext):
     await state.set_state(SearchStates.waiting_for_category)
 
 @router.callback_query(SearchStates.waiting_for_category, F.data.startswith("trending:"))
-async def trending_category(callback: types.CallbackQuery, state: FSMContext):
+async def trending_category(callback: types.CallbackQuery, state: FSMContext, session: AsyncSession):
     await callback.answer()
 
     trending_type = callback.data.split(":", 1)[1]
+    lang = await get_locale(session, callback.message.chat.id)
 
-    result = await get_trending(trending_type)
+    result = await get_trending(trending_type, lang)
     builder = InlineKeyboardBuilder()
 
     if result:

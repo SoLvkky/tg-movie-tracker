@@ -4,7 +4,7 @@ from bot.logger import logger
 
 TMDB_BASE_URL = "https://api.themoviedb.org/3"
 
-async def search_content(query: str, adult_user: bool):
+async def search_content(query: str, adult_user: bool, lang: str = "en-US"):
     async with aiohttp.ClientSession() as session:
         url = f"{TMDB_BASE_URL}/search/multi"
 
@@ -15,7 +15,7 @@ async def search_content(query: str, adult_user: bool):
 
         params = {
             "include_adult": "true" if adult_user else "false",
-            "language": "en-US",
+            "language": lang,
             "query": query
         }
 
@@ -24,7 +24,7 @@ async def search_content(query: str, adult_user: bool):
             data = await response.json()
             return data.get("results", [])
 
-async def get_content(content_type: str, id: int, method = ""):
+async def get_content(content_type: str, id: int, lang: str = "en-US", method: str = ""):
     async with aiohttp.ClientSession() as session:
         url = f"{TMDB_BASE_URL}/{content_type}/{id}{method}"
 
@@ -34,10 +34,10 @@ async def get_content(content_type: str, id: int, method = ""):
         }
 
         params = {
-            "language": "en-US"
+            "language": lang
         }
         
-        async with session.get(url, headers=headers) as response:
+        async with session.get(url, params=params, headers=headers) as response:
             logger.debug(f"get_content({id}) called")
             data = await response.json()
             match method:
@@ -46,7 +46,7 @@ async def get_content(content_type: str, id: int, method = ""):
                 case _:
                     return data.get("results")    
         
-async def get_trending(trending_type: str):
+async def get_trending(trending_type: str, lang: str = "en-US"):
     async with aiohttp.ClientSession() as session:
         url = f"{TMDB_BASE_URL}/trending/{trending_type}/week"
 
@@ -56,7 +56,7 @@ async def get_trending(trending_type: str):
         }
 
         params = {
-            "language": "en-US"
+            "language": lang
         }
 
         async with session.get(url, headers=headers, params=params) as response:

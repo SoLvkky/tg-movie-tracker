@@ -4,9 +4,11 @@ from aiogram.enums import ParseMode
 from aiogram.client.default import DefaultBotProperties
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
 from bot.middlewares.db import DatabaseMiddleware
+from bot.middlewares.i18n import I18nMiddleware
 from bot.config import settings
 from bot.handlers import content_handler, menu, my_collection, search, setting, start, stats, trending
 from bot.logger import logger
+from bot.i18n import load_locales
 
 bot = Bot(token=settings.BOT_TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
 logger.info("Config loaded")
@@ -14,6 +16,18 @@ logger.info("Config loaded")
 dp = Dispatcher()
 
 async def main():
+    load_locales()
+    logger.info("✅ Locales loaded")
+
+    engine = create_async_engine(settings.DATABASE_URL, echo=False)
+    logger.info("Database engine created")
+
+    sessionmaker = async_sessionmaker(engine, expire_on_commit=False)
+
+    dp.update.middleware(DatabaseMiddleware(sessionmaker))
+    dp.update.middleware(I18nMiddleware())
+    logger.info("Middleware updated")
+
     dp.include_routers(
         start.router,
         menu.router,
@@ -25,14 +39,6 @@ async def main():
         trending.router
     )
     logger.info("Routers in DP registered")
-
-    engine = create_async_engine(settings.DATABASE_URL, echo=False)
-    logger.info("Database engine created")
-
-    sessionmaker = async_sessionmaker(engine, expire_on_commit=False)
-
-    dp.update.middleware(DatabaseMiddleware(sessionmaker))
-    logger.info("Middleware updated")
 
     logger.info("Bot has started")
     await dp.start_polling(bot)

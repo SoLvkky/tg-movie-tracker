@@ -4,6 +4,7 @@ from aiogram.fsm.context import FSMContext
 from bot.states.search_states import SearchStates
 from bot.keyboards.back_button import back_button
 from bot.logger import logger
+from bot.i18n import t
 from database.crud import *
 from services.tmdb_api import get_trending
 router = Router()
@@ -16,12 +17,12 @@ async def trending_handler(callback: types.CallbackQuery, state: FSMContext):
 
     builder = InlineKeyboardBuilder()
 
-    builder.button(text="🎬 Movies", callback_data="trending:movie")
-    builder.button(text="📺 TV Series", callback_data="trending:tv")
+    builder.button(text=t("trending.choose.movies"), callback_data="trending:movie")
+    builder.button(text=t("trending.choose.tv"), callback_data="trending:tv")
     builder.attach(back_button("menu"))
     builder.adjust(2, 1)
 
-    await callback.message.edit_text(text="✨ Choose desired category", reply_markup=builder.as_markup())
+    await callback.message.edit_text(text=t("choose.category"), reply_markup=builder.as_markup())
     await state.set_state(SearchStates.waiting_for_category)
 
 @router.callback_query(SearchStates.waiting_for_category, F.data.startswith("trending:"))
@@ -48,7 +49,7 @@ async def trending_category(callback: types.CallbackQuery, state: FSMContext):
         builder.attach(back_button("trending"))
         builder.adjust(1)
 
-        await callback.message.edit_text("✨ Choose your content:", reply_markup=builder.as_markup())
+        await callback.message.edit_text(t("choose.content"), reply_markup=builder.as_markup())
 
         await state.set_state(SearchStates.waiting_for_choice)
         await state.update_data(search_results=result)

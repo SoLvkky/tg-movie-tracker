@@ -10,11 +10,12 @@ The bot is designed to be fully interactive: almost all actions are performed vi
 ## Features
 
 - Add Movies/TV Series to your personal collection
+- Search for content by title
 - "Trending" section
 - View and manage what you’ve added
 - Genre analytics – see your most-watched genres and distribution
 - Similar content suggestions based on your preferences
-- Search for content by title
+- Multi-language support
 
 ## Tech Stack
 

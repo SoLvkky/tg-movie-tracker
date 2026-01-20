@@ -4,6 +4,7 @@ from aiogram.fsm.context import FSMContext
 from bot.states.search_states import SearchStates
 from bot.keyboards.back_button import back_button
 from bot.logger import logger
+from bot.i18n import t
 from database.crud import *
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -31,7 +32,7 @@ async def get_movies(callback: types.CallbackQuery, session: AsyncSession, state
         builder.attach(back_button("menu"))
         builder.adjust(1)
 
-        await callback.message.edit_text(text="Your collection:", reply_markup=builder.as_markup())
+        await callback.message.edit_text(text=t("collection.text"), reply_markup=builder.as_markup())
 
         await state.set_state(SearchStates.waiting_for_choice)
         await state.update_data(parent="my_collection")
@@ -39,4 +40,4 @@ async def get_movies(callback: types.CallbackQuery, session: AsyncSession, state
     else:
         builder = back_button("menu")
 
-        await callback.message.edit_text(text="You have no Movies/TV Series!", reply_markup=builder.as_markup())
+        await callback.message.edit_text(text=t("collection.empty"), reply_markup=builder.as_markup())

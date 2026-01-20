@@ -1,6 +1,7 @@
 from aiogram import F, Router, types
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 from aiogram.fsm.context import FSMContext
+from bot.i18n import t
 from bot.states.search_states import SearchStates
 from bot.keyboards.back_button import back_button
 from database.crud import *
@@ -14,7 +15,7 @@ def get_poster(content: dict):
 
     return poster
 
-def get_data(content: dict, content_type: str):
+def get_data(content: dict, content_type: str, lang: str = "en-US"):
     overview = content.get("overview") or "Not available"
     rating = f'{round(content.get("vote_average", 0), 1)} / 10'
 
@@ -32,11 +33,11 @@ def get_data(content: dict, content_type: str):
 
             caption = (
                 f'🎬 {title}\n'
-                f'🕒 Runtime: {runtime} minutes\n\n'
-                f'🗓️ Release date: {year}\n'
-                f'⭐ Rating: {rating}\n'
-                f'🎭 Genres: {", ".join(genres)}\n\n'
-                f'📜 Plot: {overview}'
+                f'{t("caption.runtime")} {runtime} {t("caption.minutes")}\n\n'
+                f'{t("caption.release")} {year}\n'
+                f'{t("caption.rating")} {rating}\n'
+                f'{t("caption.genres")} {", ".join(genres)}\n\n'
+                f'{t("caption.plot")} {overview}'
             )
 
         case "tv":
@@ -53,11 +54,11 @@ def get_data(content: dict, content_type: str):
                 
             caption = (
                 f'🎬 {title}\n'
-                f'📺 {episodes} episodes in {seasons} seasons\n\n'
-                f'🗓️ Release date: {year}\n'
-                f'⭐ Rating: {rating}\n'
-                f'🎭 Genres: {", ".join(genres)}\n\n'
-                f'📜 Plot: {overview}'
+                f'📺 {episodes} {t("caption.episodes")} {seasons} {t("caption.seasons")}\n\n'
+                f'{t("caption.release")} {year}\n'
+                f'{t("caption.rating")} {rating}\n'
+                f'{t("caption.genres")} {", ".join(genres)}\n\n'
+                f'{t("caption.plot")} {overview}'
             )
 
     return {
@@ -97,19 +98,18 @@ async def process_choice(callback: types.CallbackQuery, state: FSMContext, sessi
     content_id = callback.data.split(":", 1)[1]
     content_type = callback.data.split("_", 1)[0]
 
-    content = await get_content(content_type, content_id)
-    c_data = get_data(content, content_type)
-
-    poster = get_poster(content)
-        
+    lang = await get_locale(session, callback.message.chat.id)
+    c_l, c_e = await get_content(content_type, content_id, lang), await get_content(content_type, content_id)
+    c_l_data, c_e_data = get_data(c_l, content_type), get_data(c_e, content_type)
+       
     await get_or_create_show(
         session=session,
-        media_type=c_data.get("media_type"),
+        media_type=c_e_data.get("media_type"),
         tmdb_id=int(content_id),
-        title=c_data.get("title"),
-        genres=c_data.get("genres"),
-        year=c_data.get("year"),
-        poster=poster
+        title=c_e_data.get("title"),
+        genres=c_e_data.get("genres"),
+        year=c_e_data.get("year"),
+        poster=get_poster(c_e)
     )
 
     user = await session.scalar(select(User).where(User.telegram_id == callback.message.chat.id))
@@ -117,12 +117,12 @@ async def process_choice(callback: types.CallbackQuery, state: FSMContext, sessi
 
     res = await has_watched(session, user.id, c_obj.id)
 
-    watched = "✅ Watched - Click to change" if res else "❌ Not Watched - Click to change"
+    watched = t("watch_status.true") if res else t("watch_status.false")
 
     builder = InlineKeyboardBuilder()
     builder.button(text=watched, callback_data="add_confirm")
-    builder.button(text="Show Similar", callback_data="find_similar")
-    builder.button(text="MAIN MENU", callback_data="menu_delete")
+    builder.button(text=t("show_similar"), callback_data="find_similar")
+    builder.button(text=t("main_menu"), callback_data="menu_delete")
 
     if parent in ("search", "trending"):
         builder.attach(back_button("go_back"))
@@ -130,18 +130,18 @@ async def process_choice(callback: types.CallbackQuery, state: FSMContext, sessi
     builder.adjust(1, 1, 2)
 
     await callback.message.answer_photo(
-        photo=poster,
-        caption=c_data.get("caption"),
+        photo=get_poster(c_l),
+        caption=c_l_data.get("caption"),
         reply_markup=builder.as_markup())
 
     await callback.message.delete()
 
     await state.update_data(content=int(content_id))
-    await state.update_data(content_type=c_data.get("content_type"))
+    await state.update_data(content_type=c_e_data.get("content_type"))
     await state.set_state(SearchStates.waiting_for_confirmation)
 
 @router.callback_query(SearchStates.waiting_for_confirmation)
-async def confirm_movie(callback: types.CallbackQuery, state: FSMContext, session: AsyncSession):
+async def confirm_content(callback: types.CallbackQuery, state: FSMContext, session: AsyncSession):
     
     data = await state.get_data()
     parent = data.get("parent")
@@ -153,7 +153,7 @@ async def confirm_movie(callback: types.CallbackQuery, state: FSMContext, sessio
             content_type = data.get("content_type")
             
             if not content_id:
-                await callback.message.answer("Content ID missing, state is empty.")
+                await callback.message.answer(t("state_empty"))
                 return
 
             result = await get_content(content_type, content_id, "/similar")
@@ -165,7 +165,7 @@ async def confirm_movie(callback: types.CallbackQuery, state: FSMContext, sessio
                 logger.info(f"User {callback.message.chat.username} used /similar for movie {content_id}")
 
                 await callback.message.answer(
-                    "✨ Choose similar Content:",
+                    t("choose.similar"),
                     reply_markup=builder.as_markup()
                 )
                 await callback.message.delete()
@@ -173,7 +173,7 @@ async def confirm_movie(callback: types.CallbackQuery, state: FSMContext, sessio
                 await state.update_data(parent="similar")
                 await state.set_state(SearchStates.waiting_for_choice)
             else:
-                await callback.message.answer("No similar content found.")
+                await callback.message.answer(t("no_similar"))
             
             return
 
@@ -183,7 +183,7 @@ async def confirm_movie(callback: types.CallbackQuery, state: FSMContext, sessio
             await callback.answer()
 
             if not search_results:
-                await callback.answer("There are no previous results")
+                await callback.answer(t("no_previous"))
                 return
 
             builder = InlineKeyboardBuilder()
@@ -193,16 +193,16 @@ async def confirm_movie(callback: types.CallbackQuery, state: FSMContext, sessio
 
                 match i.get("media_type"):
                     case "movie":
-                        title, release, media_type, c_data = i.get("title"), i.get("release_date"), "MOVIE", "movie_choice"
+                        title, release, media_type, c_data = i.get("title"), i.get("release_date"), t("type_movie"), "movie_choice"
                     case "tv":
-                        title, release, media_type, c_data = i.get("name"), i.get("first_air_date"), "TV", "tv_choice"
+                        title, release, media_type, c_data = i.get("name"), i.get("first_air_date"), t("type_tv"), "tv_choice"
                 builder.button(text=f'{media_type} | {title}, {release.split("-")[0] or "????"}{adult}', callback_data=f"{c_data}:{i['id']}")
                 
             builder.attach(back_button(parent))
             builder.adjust(1)
 
             await callback.message.answer(
-                text="✨ Choose your Movie/TV Series:", 
+                text=t("choose.content"), 
                 reply_markup=builder.as_markup()
             )
 
@@ -217,15 +217,15 @@ async def confirm_movie(callback: types.CallbackQuery, state: FSMContext, sessio
             content = await session.scalar(select(Content).where(Content.tmdb_id == data.get("content")))
             result = await add_watched(session, user.id, content.id)
 
-            watch_status = "✅ Watched - Click to change" if result else "❌ Not Watched - Click to change"
-            watch_answer = "Content was added to your Collection" if result else "Content was removed from your Collection"
+            watch_status = t("watch_status.true") if result else t("watch_status.false")
+            watch_answer = t("collection.add") if result else t("collection.remove")
 
             await callback.answer(watch_answer)
 
             builder = InlineKeyboardBuilder()
             builder.button(text=watch_status, callback_data="add_confirm")
-            builder.button(text="Show Similar", callback_data="find_similar")
-            builder.button(text="MAIN MENU", callback_data="menu_delete")
+            builder.button(text=t("show_similar"), callback_data="find_similar")
+            builder.button(text=t("main_menu"), callback_data="menu_delete")
 
             if parent in ("search", "trending"):
                 builder.attach(back_button("go_back"))

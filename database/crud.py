@@ -92,6 +92,33 @@ async def get_top_genres(session: AsyncSession, user_id: int):
     )
     return res.all()
 
+async def set_locale(session: AsyncSession, user_id: int, locale: str):
+    logger.debug(f"set_locale(user_id={user_id}, locale={locale}) called")
+
+    res = await session.execute(select(User).where(User.telegram_id == user_id))
+    user = res.scalar_one_or_none()
+
+    if user is None:
+        raise ValueError(f"User {user_id} not found")
+    
+    user.locale = locale
+    await session.commit()
+    await session.refresh(user)
+    return user.locale
+
+async def get_locale(session: AsyncSession, user_id: int):
+    logger.debug(f"get_locale(user_id={user_id}) called")
+
+    res = await session.execute(
+        select(User.locale).where(User.telegram_id == user_id)
+    )
+    locale = res.scalar_one_or_none()
+
+    if locale is None:
+        raise ValueError(f"User {user_id} not found")
+    
+    return locale
+
 # Show CRUD
 async def get_or_create_show(session: AsyncSession, tmdb_id: int, title: str, genres: JSON, year: int, poster: str, media_type: int):
     logger.debug(f"get_or_create_show(tmdb_id={tmdb_id}, title={title}, genres={genres}, year={year}, poster={poster}, media_type={media_type}) called")

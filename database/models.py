@@ -25,6 +25,7 @@ class User(Base):
     created_at = Column(DateTime(timezone=True), default=func.now())
     adult = Column(Boolean, nullable=False, default=expression.false(), server_default=expression.false())
     start_code = Column(Integer, nullable=False, default=0, server_default=text("0"))
+    locale = Column(String, nullable=False, default="en-US", server_default="en-US")
 
     watched_content = relationship("WatchedContent", back_populates="user")
 

@@ -1,0 +1,87 @@
+{
+    "adult_status": {
+        "true": "✅ Adult - Show/Hide 18+ content",
+        "false": "❌ Adult - Show/Hide 18+ content"
+    },
+    "caption": {
+        "runtime": "🕒 Runtime:",
+        "release": "🗓️ Release year:",
+        "rating": "⭐ Rating:",
+        "genres": "🎭 Genres:",
+        "plot": "📜 Plot:",
+        "episodes": "episodes in",
+        "seasons": "seasons",
+        "minutes": "minutes"
+    },
+    "choose": {
+        "similar": "✨ Choose similar Content:",
+        "content": "✨ Choose your Movie/TV Series:",
+        "category": "✨ Choose desired category:",
+        "language": "🌎 Choose preferred language:"
+    },
+    "collection": {
+        "add": "Content was added to your Collection",
+        "remove": "Content was removed from your Collection",
+        "text": "Your collection:",
+        "empty": "You have no Movies/TV Series!"
+    },
+    "go_back": "GO BACK",
+    "language": {
+        "chosen": {
+            "en": "🇺🇸 Selected language: English",
+            "es": "🇪🇸 Idioma seleccionado: Español",
+            "fr": "🇫🇷 Langue sélectionnée : Français",
+            "de": "🇩🇪 Ausgewählte Sprache: Deutsch",
+            "ru": "Выбранный язык: Русский"
+        },
+        "set": {
+            "en": "🇺🇸 English",
+            "es": "🇪🇸 Spanish (Soon)",
+            "fr": "🇫🇷 French (Soon)",
+            "de": "🇩🇪 German (Soon)",
+            "ru": "🇷🇺 Russian"
+        },
+        "changed": "Language was changed",
+        "not_changed": "Chosen language is in development. Language was not changed"
+    },
+    "main_menu": "MAIN MENU",
+    "menu": {
+        "search": "🔍 Search",
+        "trending": "✨ Trending",
+        "collection": "📋 My Collection",
+        "stats": "📊 Stats",
+        "settings": "⚙️ Settings"
+    },
+    "menu_text": "Choose your option",
+    "no_previous": "There are no previous results",
+    "no_similar": "No similar content found.",
+    "search_not_found": "❌ Content not found. Try a more precise name",
+    "search_title": "🎬 Please send the title of the Movie/TV Series you want to find",
+    "search_wrong_type": "Please send the title as text (not a photo/sticker/voice message).",
+    "settings": {
+        "adult": "Switch Adult Mode",
+        "language": "Change Language",
+        "text": "Set your preferences:"
+    },
+    "show_similar": "🔍 Show Similar",
+    "start": "Hi! I'll help you keep track of the Movies and TV Series you've watched\n\nCommands:\n/menu - Main Menu",
+    "state_empty": "Content ID missing, state is empty.",
+    "stats": {
+        "user": "👤 User:",
+        "movies": "🎬 Movies watched:",
+        "tv": "📺 TV Series watched:",
+        "genres": "🎭 Favorite genres:"
+    },
+    "trending": {
+        "choose": {
+            "movies": "🎬 Movies",
+            "tv": "📺 TV Series"
+        }
+    },
+    "type_movie": "MOVIE",
+    "type_tv": "TV",
+    "watch_status": {
+        "true": "✅ Watched - Click to change",
+        "false": "❌ Not Watched - Click to change"
+    }
+}

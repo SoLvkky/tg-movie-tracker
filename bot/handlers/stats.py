@@ -1,6 +1,7 @@
 from aiogram import F,Router, types
 from bot.keyboards.back_button import back_button
 from bot.logger import logger
+from bot.i18n import t
 from database.crud import *
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -20,8 +21,8 @@ async def user_stats(callback: types.CallbackQuery, session: AsyncSession):
     logger.info(f"User @{callback.from_user.username} used /stats")
 
     await callback.message.edit_text(text=(
-        f"👤 User: {callback.message.chat.username}\n\n"
-        f"🎬 Movies watched: {count.get("movies")}\n"
-        f"📺 TV Series watched: {count.get("series")}\n\n"
-        f"🎭 Favorite genres:\n{'\n'.join(f"{genre}: {count}" for genre, count in genres.items())}\n"
+        f"{t("stats.user")} {callback.message.chat.username}\n\n"
+        f"{t("stats.movies")} {count.get("movies")}\n"
+        f"{t("stats.tv")} {count.get("series")}\n\n"
+        f"{t("stats.genres")}\n{'\n'.join(f"{genre}: {count}" for genre, count in genres.items())}\n"
     ), reply_markup=builder.as_markup())

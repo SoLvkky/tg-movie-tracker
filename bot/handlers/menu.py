@@ -4,6 +4,7 @@ from aiogram.types import Message
 from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
 from bot.keyboards.main_menu import get_main_menu
+from bot.i18n import t
 from bot.logger import logger
 
 router = Router()
@@ -11,7 +12,7 @@ router = Router()
 @router.message(Command("menu"))
 async def cmd_start(message: Message) -> None:
     logger.info(f"User @{message.chat.username} used /menu")
-    await message.answer(text="Choose your option:", reply_markup=get_main_menu())
+    await message.answer(text=t("menu_text"), reply_markup=get_main_menu())
 
 @router.callback_query(F.data == "menu")
 async def go_to_menu(callback: types.CallbackQuery):
@@ -20,7 +21,7 @@ async def go_to_menu(callback: types.CallbackQuery):
     logger.info(f"User @{callback.message.chat.username} used /menu")
 
     await callback.message.edit_text(
-        text="Choose your option:",
+        text=t("menu_text"),
         reply_markup=get_main_menu()
     )
 
@@ -32,7 +33,7 @@ async def delete_menu(callback: types.CallbackQuery, bot: Bot, state: FSMContext
     logger.info(f"User @{callback.message.chat.username} used /menu")
 
     send_task = bot(callback.message.answer(
-        text="Choose your option:",
+        text=t("menu_text"),
         reply_markup=get_main_menu()
     ))
     del_task = bot.delete_message(

@@ -145,6 +145,7 @@ async def confirm_content(callback: types.CallbackQuery, state: FSMContext, sess
     
     data = await state.get_data()
     parent = data.get("parent")
+    lang = await get_locale(session, callback.message.chat.id)
 
     match callback.data:
         case "find_similar":
@@ -156,13 +157,12 @@ async def confirm_content(callback: types.CallbackQuery, state: FSMContext, sess
                 await callback.message.answer(t("state_empty"))
                 return
 
-            result = await get_content(content_type, content_id, "/similar")
-            print(content_type, content_id)
+            result = await get_content(content_type, content_id, lang, "/similar")
 
             if result:
                 builder = build_media_keyboard(result, content_id, content_type)
 
-                logger.info(f"User {callback.message.chat.username} used /similar for movie {content_id}")
+                logger.info(f"User {callback.message.chat.username} used /similar for content {content_id}")
 
                 await callback.message.answer(
                     t("choose.similar"),
@@ -196,6 +196,8 @@ async def confirm_content(callback: types.CallbackQuery, state: FSMContext, sess
                         title, release, media_type, c_data = i.get("title"), i.get("release_date"), t("type_movie"), "movie_choice"
                     case "tv":
                         title, release, media_type, c_data = i.get("name"), i.get("first_air_date"), t("type_tv"), "tv_choice"
+                    case _:
+                        continue
 
                 match parent:
                     case "search":

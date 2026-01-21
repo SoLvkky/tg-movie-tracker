@@ -38,6 +38,8 @@ async def process_title(message: types.Message, session: AsyncSession, state: FS
                     title, release, media_type, c_data = i.get("title"), i.get("release_date"), t("type_movie"), "movie_choice"
                 case "tv":
                     title, release, media_type, c_data = i.get("name"), i.get("first_air_date"), t("type_tv"), "tv_choice"
+                case _:
+                    continue
 
             builder.button(text=f'{media_type} | {title}, {release.split("-")[0] or "????"}{adult}', callback_data=f"{c_data}:{i.get('id')}")
 

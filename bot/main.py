@@ -11,7 +11,7 @@ from bot.logger import logger
 from bot.i18n import load_locales
 
 bot = Bot(token=settings.BOT_TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
-logger.info("Config loaded")
+logger.info("✅ Config loaded")
 
 dp = Dispatcher()
 
@@ -20,13 +20,13 @@ async def main():
     logger.info("✅ Locales loaded")
 
     engine = create_async_engine(settings.DATABASE_URL, echo=False)
-    logger.info("Database engine created")
+    logger.info("✅ Database engine created")
 
     sessionmaker = async_sessionmaker(engine, expire_on_commit=False)
 
     dp.update.middleware(DatabaseMiddleware(sessionmaker))
     dp.update.middleware(I18nMiddleware())
-    logger.info("Middleware updated")
+    logger.info("✅ Middleware updated")
 
     dp.include_routers(
         start.router,
@@ -38,9 +38,9 @@ async def main():
         setting.router,
         trending.router
     )
-    logger.info("Routers in DP registered")
+    logger.info("✅ Routers in DP registered")
 
-    logger.info("Bot has started")
+    logger.info("✅ Bot has started")
     await dp.start_polling(bot)
 
 if __name__ == "__main__":

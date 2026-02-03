@@ -7,6 +7,11 @@ A Telegram bot that helps users build a personal Movies/TV Series collection, tr
 
 The bot is designed to be fully interactive: almost all actions are performed via inline buttons, not text commands.
 
+## Live Demo
+
+Live demo available via Telegram Bot
+[Watched Tracker](https://t.me/movie_collect_bot)
+
 ## Features
 
 - Add Movies/TV Series to your personal collection
